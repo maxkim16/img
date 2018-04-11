@@ -212,6 +212,8 @@ public class ImageJFrame extends javax.swing.JFrame {
                     // get the new width and height
                     newWidth = Integer.parseInt(jTextFieldWidth.getText());
                     newHeight = Integer.parseInt(jTextFieldHeight.getText());
+                    imgOpe.zoomLinearX(imgOpe.imgGray, newWidth, newWidth, newFileName);
+                    imgOpe.display(newFileName);
                     break;
                 case "Linear Interpolation (y-values)":
                     // get the new width and height
@@ -227,7 +229,6 @@ public class ImageJFrame extends javax.swing.JFrame {
                     imgOpe.zoomBilinear(imgOpe.imgGray, newWidth, newHeight, newFileName);
                     imgOpe.display(newFileName);
                     break;
-                    
                 case "Shrink":
                     // get the new width and height
                     newWidth = Integer.parseInt(jTextFieldWidth.getText());

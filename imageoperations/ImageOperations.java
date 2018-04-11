@@ -225,6 +225,36 @@ public class ImageOperations {
         writeFile(zoomedImage, filename);
     }
 
+    
+        public void zoomLinearX(BufferedImage bi, int newW, int newH, String filename) {
+        BufferedImage zoomedImage = new BufferedImage(newW, newH, BufferedImage.TYPE_BYTE_GRAY);
+        SampleModel sampleModel = null;
+        int w1, h1, w2, h2;
+        int[][] oriImgPixel, zoomedPixel;
+        int[] pixelIn1dArr, zoomedPixelIn1dArr;
+        w1 = bi.getWidth();
+        h1 = bi.getHeight();
+        oriImgPixel = new int[w1][h1];
+
+        try {
+            oriImgPixel = imgTo2DArrPixel(bi);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        pixelIn1dArr = gridTo1dArr(oriImgPixel);
+        // Use Linear Algorithm on the given pixel values (only Y values)
+        zoomedPixelIn1dArr = resizeLinearGrayX(pixelIn1dArr, w1, h1, newW, newH);
+
+        // Use Nearest Neighbors to interpolate x values /////////////
+        zoomedPixelIn1dArr = useNNyValues(pixelIn1dArr, w1, h1, newW, newH);
+
+        zoomedPixel = pixelTo1dToGrid(zoomedPixelIn1dArr, newW, newH);
+
+        sampleModel = getSampleModel(zoomedImage);
+        zoomedImage = convertPixelToBufImg(zoomedPixel, sampleModel);
+        writeFile(zoomedImage, filename);
+    }
+    
     public void zoomLinearY(BufferedImage bi, int newW, int newH, String filename) {
         BufferedImage zoomedImage = new BufferedImage(newW, newH, BufferedImage.TYPE_BYTE_GRAY);
         SampleModel sampleModel = null;
@@ -254,6 +284,42 @@ public class ImageOperations {
         writeFile(zoomedImage, filename);
     }
 
+    // Use Lilinear Interpolation to zoom the image only in x-direction
+    public int[] resizeLinearGrayX(int[] pixels, int w, int h, int w2, int h2) {
+        int colsForLinearInt = w2 / w;
+        System.out.println("selected cols: " + colsForLinearInt);
+        int[][] temp2 = new int[w2][h2];
+        int[] temp = new int[w2 * h2];
+        int A, B, C, D, x, y, index, gray;
+        float x_ratio = ((float) (w - 1)) / w2;
+        float y_ratio = ((float) (h - 1)) / h2;
+        float x_diff, y_diff;
+        int offset = 0;
+        for (int i = 0; i < h2; i++) {
+            for (int j = 0; j < w2; j += colsForLinearInt) {
+                x = (int) (x_ratio * j);
+                y = (int) (y_ratio * i);
+                x_diff = (x_ratio * j) - x;
+                y_diff = (y_ratio * i) - y;
+                index = y * w + x;
+
+                // B and D are ignored since new x values won't be calculated
+                A = pixels[index] & 0xff;
+                // B = pixels[index + 1] & 0xff;
+                C = pixels[index+w] & 0xff ;
+                // D = pixels[index+w+1] & 0xff ;
+
+                // Y = A(1-w)(1-h) + B(w)(1-h) + C(h)(1-w) + Dwh
+                gray = (int) (A * (1 - x_diff) * (1 - y_diff) + C * (y_diff) * (1 - x_diff));
+                temp2[i][j] = gray;
+                //temp[offset++] = gray ;                                   
+            }
+        }
+        // return temp;
+        return gridTo1dArr(temp2);
+        //return temp;
+    }
+    
     // Use Lilinear Interpolation to zoom the image only in y-direction
     public int[] resizeLinearGrayY(int[] pixels, int w, int h, int w2, int h2) {
         int rowsForLinearInt = h2 / h;
@@ -370,6 +436,27 @@ public class ImageOperations {
                 continue;
             }
             for (int j = 0; j < w2; j++) {
+                px = Math.floor(j * x_ratio);
+                py = Math.floor(i * y_ratio);
+                temp[(i * w2) + j] = pixels[(int) ((py * w1) + px)];
+            }
+        }
+        return temp;
+    }
+    
+    // useNNxValues(pixelIn1dArr, w1, h1, newW, newH);
+    // Use Nearest Neighbors method to interpolate x values
+    public int[] useNNyValues(int[] pixels, int w1, int h1, int w2, int h2) {
+        int[] temp = new int[w2 * h2];
+        int colsForXvalues = w2 / w1;
+        double x_ratio = w1 / (double) w2;
+        double y_ratio = h1 / (double) h2;
+        double px, py;
+        for (int i = 0; i < h2; i++) {
+            for (int j = 0; j < w2; j++) {
+                if ((j == 0) || ((j % colsForXvalues) == 0)) {
+                    continue;
+                }
                 px = Math.floor(j * x_ratio);
                 py = Math.floor(i * y_ratio);
                 temp[(i * w2) + j] = pixels[(int) ((py * w1) + px)];
