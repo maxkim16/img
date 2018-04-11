@@ -208,14 +208,15 @@ public class ImageJFrame extends javax.swing.JFrame {
                 case "Change Grayscale Level Resolution":
                     numOfBits = Integer.parseInt(jTextFieldNumBits.getText());
                     imgOpe.changeGrayScaleRes(imgOpe.imgGray, numOfBits, newFileName);
+                    imgOpe.displayLeft(fileName);
                     imgOpe.display(newFileName);
-                    //imgDisplayer.display2Images(fileName, newFileName);
                     break;
                 case "Nearest Neighbors":
                     // get the new width and height
                     newWidth = Integer.parseInt(jTextFieldWidth.getText());
                     newHeight = Integer.parseInt(jTextFieldHeight.getText());
                     imgOpe.zoomNeighbors(imgOpe.imgGray, newWidth, newHeight, newFileName);
+                    imgOpe.displayLeft(fileName);
                     imgOpe.display(newFileName);
                     break;
                 case "Linear Interpolation (x-values)":
@@ -223,6 +224,7 @@ public class ImageJFrame extends javax.swing.JFrame {
                     newWidth = Integer.parseInt(jTextFieldWidth.getText());
                     newHeight = Integer.parseInt(jTextFieldHeight.getText());
                     imgOpe.zoomLinearX(imgOpe.imgGray, newWidth, newHeight, newFileName);
+                    imgOpe.displayLeft(fileName);
                     imgOpe.display(newFileName);
                     break;
                 case "Linear Interpolation (y-values)":
@@ -230,6 +232,7 @@ public class ImageJFrame extends javax.swing.JFrame {
                     newWidth = Integer.parseInt(jTextFieldWidth.getText());
                     newHeight = Integer.parseInt(jTextFieldHeight.getText());
                     imgOpe.zoomLinearY(imgOpe.imgGray, newWidth, newHeight, newFileName);
+                    imgOpe.displayLeft(fileName);
                     imgOpe.display(newFileName);
                     break;
                 case "Bilinear Interpolation":
@@ -237,6 +240,7 @@ public class ImageJFrame extends javax.swing.JFrame {
                     newWidth = Integer.parseInt(jTextFieldWidth.getText());
                     newHeight = Integer.parseInt(jTextFieldHeight.getText());
                     imgOpe.zoomBilinear(imgOpe.imgGray, newWidth, newHeight, newFileName);
+                    imgOpe.displayLeft(fileName);
                     imgOpe.display(newFileName);
                     break;
                 case "Shrink":
@@ -244,6 +248,7 @@ public class ImageJFrame extends javax.swing.JFrame {
                     newWidth = Integer.parseInt(jTextFieldWidth.getText());
                     newHeight = Integer.parseInt(jTextFieldHeight.getText());
                     imgOpe.shrinkImage(imgOpe.imgGray, newWidth, newHeight, newFileName);
+                    imgOpe.displayLeft(fileName);
                     imgOpe.display(newFileName);
                     break;
             }

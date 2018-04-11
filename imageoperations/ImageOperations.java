@@ -6,7 +6,9 @@
 package imageoperations;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.awt.image.Raster;
 import java.awt.image.SampleModel;
@@ -18,6 +20,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 /**
@@ -83,10 +86,16 @@ public class ImageOperations {
         return img;
     }
 
-    public void writeFile(BufferedImage bi, String path) {
+    public void writeFile(BufferedImage bi, String name) {
         try {
-            File outputfile = new File(path);
+            // wrtie it in the currnet directory
+            File outputfile = new File(name);
             ImageIO.write(bi, "gif", outputfile);
+            
+            // write it in the src file 
+            File outputfile2 = new File(name);
+            ImageIO.write(bi, "gif", outputfile2);
+            
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
@@ -619,6 +628,36 @@ public class ImageOperations {
                 editorFrame.pack();
                 editorFrame.setLocationRelativeTo(null);
                 editorFrame.setVisible(true);
+            }
+        });
+    }
+    
+        // display the image in a jFrame
+    public void displayLeft(final String filename) throws Exception {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                JFrame frame = new JFrame("OriginalImage");
+                
+                frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+
+                BufferedImage image = null;
+                try {
+                    image = ImageIO.read(new File(filename));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+                //ImageIcon imageIcon = new ImageIcon(this.getClass().getResource(filename));
+                ImageIcon imageIcon = new ImageIcon(image);
+                JLabel jLabel = new JLabel();
+                jLabel.setIcon(imageIcon);
+                frame.getContentPane().add(jLabel, BorderLayout.CENTER);
+
+                frame.pack();
+                //frame.setLocationRelativeTo(null);
+                frame.setLocation(0, dim.height/2-frame.getSize().height/2); // move to the left
+                frame.setVisible(true);
             }
         });
     }

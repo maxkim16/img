@@ -27,9 +27,8 @@ public class ImageDisplayer extends JFrame {
         BufferedImage bi1 = null, bi2 = null;
         
         try {
-            bi1 = ImageIO.read(new File(fileName1));
-            bi2 = ImageIO.read(new File(fileName2));
-            JOptionPane.showMessageDialog(null, bi1.getWidth());
+            bi1 = ImageIO.read(new File("lena_gray.gif"));
+            bi2 = ImageIO.read(new File("128.gif"));
         } catch (Exception e) {
             e.printStackTrace();
             System.exit(1);
@@ -40,9 +39,7 @@ public class ImageDisplayer extends JFrame {
         
         label1 = new JLabel(imageIcon1);
         label2 = new JLabel(imageIcon2);
-        //label1.setIcon(imageIcon1);
-       // label1.setIcon(imageIcon2);
-        
+
         add(label1);
         add(label2);
         
@@ -50,6 +47,6 @@ public class ImageDisplayer extends JFrame {
         gui.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         gui.setVisible(true);
         gui.pack();
-        gui.setTitle("Original and Resampled Image");
+        gui.setTitle("2 images");
     }
 }
