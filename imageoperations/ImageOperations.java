@@ -24,8 +24,10 @@ import javax.swing.WindowConstants;
  * @author maxkim
  */
 public class ImageOperations {
-	
-	public static void getImgInfo(BufferedImage bi) {
+    
+    	public BufferedImage img, imgGray = null;
+    
+	public void getImgInfo(BufferedImage bi) {
 
 		// print the height and width of the image
 		System.out.println("width:" + bi.getWidth());
@@ -36,7 +38,7 @@ public class ImageOperations {
 	}
 	
 	// convert the BufferedImage into a 2D array 
-	public static int[][] imgTo2DArrPixel(BufferedImage img) throws IOException {
+	public int[][] imgTo2DArrPixel(BufferedImage img) throws IOException {
 	    int width = img.getWidth();
 	    int height = img.getHeight();
 	    int[][] imgArr = new int[width][height];
@@ -56,7 +58,7 @@ public class ImageOperations {
 	    return imgArr;
 	}
 	
-	public static void printPixels(int[][] arr) {
+	public void printPixels(int[][] arr) {
 		int row = arr.length;
 		int col = arr[0].length;
 		for (int i = 0; i < row; i++ ) {
@@ -70,7 +72,7 @@ public class ImageOperations {
 
 	}
 	
-	public static BufferedImage loadImage(String path) {
+	public BufferedImage loadImage(String path) {
 		BufferedImage img = null;
 		try {
 			File imgFile = new File(path);
@@ -81,7 +83,7 @@ public class ImageOperations {
 		return img;
 	}
 	
-	public static void writeFile(BufferedImage bi, String path) {
+	public void writeFile(BufferedImage bi, String path) {
 		try {
 		    File outputfile = new File(path);
 		    ImageIO.write(bi, "gif", outputfile);
@@ -91,13 +93,13 @@ public class ImageOperations {
 	}
 	
 	// convert the type of BufferedImage to TYPE_BYTE_GRAY and return it
-	public static BufferedImage convertToGrayScale(BufferedImage originalImg) {
+	public BufferedImage convertToGrayScale(BufferedImage originalImg) {
 	    BufferedImage grayScaleImg = new BufferedImage(originalImg.getWidth(), originalImg.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
 	    grayScaleImg.getGraphics().drawImage(originalImg, 0, 0, null);
 	    return grayScaleImg;
 	}
 
-	public static void decreaseIntensity(int[][] arr, int decVal) {
+	public void decreaseIntensity(int[][] arr, int decVal) {
 		int row = arr.length;
 		int col = arr[0].length;
 		for (int i = 0; i < row; i++ ) {
@@ -112,7 +114,7 @@ public class ImageOperations {
 		}
 	}
 	
-	public static BufferedImage convertPixelToBufImg(int pixels[][], SampleModel sampleModel) {
+	public BufferedImage convertPixelToBufImg(int pixels[][], SampleModel sampleModel) {
 		int w = pixels.length;
 		int h = pixels[0].length;
 		// sampleModel is needed instead of image.getData() function
@@ -128,7 +130,7 @@ public class ImageOperations {
 		return image;
 	}
 	
-	public static void shrinkPixels(int[][] arr, int newW, int newH) {
+	public void shrinkPixels(int[][] arr, int newW, int newH) {
 		int row = arr.length;
 		int col = arr[0].length;
 		
@@ -154,7 +156,7 @@ public class ImageOperations {
 		}
 	}
 	
-	public static void createSample() throws IOException {
+	public void createSample() throws IOException {
 		BufferedImage lena, lenaGray, modifiedLena = null;
 		int[][] lenaArr = null;
 		SampleModel sampleModel;
@@ -194,14 +196,14 @@ public class ImageOperations {
 	}
 	
 	// this method returns the sampleModel of the bufferedImage
-	public static SampleModel getSampleModel(BufferedImage bi) {
+	public SampleModel getSampleModel(BufferedImage bi) {
 		Raster raster = bi.getData();
 		SampleModel sampleModel = raster.getSampleModel();
 		return sampleModel;
 	}
 	
 	// Use Nearest Neighbors Interpolation algorithm to zoom the image
-	public static void zoomNeighbors(BufferedImage bi, int newW, int newH, String filename) {
+	public void zoomNeighbors(BufferedImage bi, int newW, int newH, String filename) {
 		BufferedImage zoomedImage = new BufferedImage(newW, newH, BufferedImage.TYPE_BYTE_GRAY);
 		SampleModel sampleModel = null;
 		int w1, h1, w2, h2;
@@ -227,7 +229,7 @@ public class ImageOperations {
 		writeFile(zoomedImage, filename);
 	}
 	
-	public static void zoomLinearY(BufferedImage bi, int newW, int newH,String direction, String filename) {
+	public void zoomLinearY(BufferedImage bi, int newW, int newH, String filename) {
 		BufferedImage zoomedImage = new BufferedImage(newW, newH, BufferedImage.TYPE_BYTE_GRAY);
 		SampleModel sampleModel = null;
 		int w1, h1, w2, h2;
@@ -245,7 +247,7 @@ public class ImageOperations {
 		}
 		pixelIn1dArr = gridTo1dArr(oriImgPixel);
 		// Use Linear Algorithm on the given pixel values (only Y values)
-		zoomedPixelIn1dArr = resizeLinearGrayY(pixelIn1dArr, w1, h1, newW, newH, direction); 
+		zoomedPixelIn1dArr = resizeLinearGrayY(pixelIn1dArr, w1, h1, newW, newH); 
 		
 		// Use Nearest Neighbors to interpolate x values /////////////
 		zoomedPixelIn1dArr = useNNxValues(pixelIn1dArr, w1, h1, newW, newH);
@@ -258,7 +260,7 @@ public class ImageOperations {
 	}
 	
 	// Use Lilinear Interpolation to zoom the image only in y-direction
-		public static int[] resizeLinearGrayY(int[] pixels, int w, int h, int w2, int h2, String direction) {
+	public int[] resizeLinearGrayY(int[] pixels, int w, int h, int w2, int h2) {
 			int rowsForLinearInt = h2/h;
 			System.out.println("selected rows: " + rowsForLinearInt);
 			int[][] temp2 = new int[w2][h2];
@@ -296,7 +298,7 @@ public class ImageOperations {
 		}
 		
 	
-	public static void zoomBilinear(BufferedImage bi, int newW, int newH, String filename) {
+	public void zoomBilinear(BufferedImage bi, int newW, int newH, String filename) {
 		BufferedImage zoomedImage = new BufferedImage(newW, newH, BufferedImage.TYPE_BYTE_GRAY);
 		SampleModel sampleModel = null;
 		int w1, h1, w2, h2;
@@ -323,7 +325,7 @@ public class ImageOperations {
 	}
 	
 	// Use Bilinear Interpolation to zoom the image
-	public static int[] resizeBilinearGray(int[] pixels, int w, int h, int w2, int h2) {
+	public int[] resizeBilinearGray(int[] pixels, int w, int h, int w2, int h2) {
 	    int[] temp = new int[w2*h2] ;
 	    int A, B, C, D, x, y, index, gray ;
 	    float x_ratio = ((float)(w-1))/w2 ;
@@ -358,7 +360,7 @@ public class ImageOperations {
 	
 	
 	
-	public static int[][] pixelTo1dToGrid(int[] a, int h, int w) {
+	public int[][] pixelTo1dToGrid(int[] a, int h, int w) {
 		int[][] b = new int[h][w];
 		for (int i = 0; i < h; i++)
 			for (int j = 0; j < w; j++)
@@ -368,7 +370,7 @@ public class ImageOperations {
 	
 	// useNNxValues(pixelIn1dArr, w1, h1, newW, newH);
 	// Use Nearest Neighbors method to interpolate x values
-	public static int[] useNNxValues(int[] pixels, int w1, int h1, int w2, int h2) {
+	public int[] useNNxValues(int[] pixels, int w1, int h1, int w2, int h2) {
 	    int[] temp = new int[w2*h2] ;
 	    int rowsForXvalues = h2/w1;
 	    double x_ratio = w1/(double)w2 ;
@@ -387,7 +389,7 @@ public class ImageOperations {
 	    return temp ;
 	}
 	
-	public static int[] resizePixelsNN(int[] pixels, int w1, int h1, int w2, int h2) {
+	public int[] resizePixelsNN(int[] pixels, int w1, int h1, int w2, int h2) {
 	    int[] temp = new int[w2*h2] ;
 	    double x_ratio = w1/(double)w2 ;
 	    double y_ratio = h1/(double)h2 ;
@@ -403,7 +405,7 @@ public class ImageOperations {
 	}
 	
 	// returns pixel values stored as a grid into a 1d array
-	public static int[] gridTo1dArr(int[][] grid) {
+	public int[] gridTo1dArr(int[][] grid) {
 		int h1 = grid.length;
 		int w1 = grid[0].length;
 		int[] arr = new int[w1* h1];
@@ -414,7 +416,7 @@ public class ImageOperations {
 	}
 	
 	//
-	public static int[][] changeGrayScaleRes(BufferedImage bi, int numOfBits, String name) throws IOException {
+	public int[][] changeGrayScaleRes(BufferedImage bi, int numOfBits, String name) throws IOException {
 		BufferedImage biGray, modifiedBi = null;
 		int[][] biGrayArr = null;
 		SampleModel sampleModel;
@@ -450,7 +452,7 @@ public class ImageOperations {
 	}
 	
 	// change the grayscale resolution by modifying all the pixel values
-	public static void changeGrayResPixel(int[][] pixel, int numOfBits) {
+	public void changeGrayResPixel(int[][] pixel, int numOfBits) {
 		// commonly the number of bits used for the byte image is 8 in a grayscale image
 		int defaultNumOfBits = 8; // 
 		int numOfRow = pixel.length;
@@ -464,7 +466,7 @@ public class ImageOperations {
 	}
 	
 	// shrink the pixel grid by given the size
-	public static int[][] shrinkPixel(int[][] pixel, int numRow, int numCol) {
+	public int[][] shrinkPixel(int[][] pixel, int numRow, int numCol) {
 		int[][] shrinkedPixel = new int[numRow][numCol];
 		int numRowOriImg = pixel.length;
 		int numColOriImg = pixel[0].length;
@@ -477,7 +479,7 @@ public class ImageOperations {
 		return shrinkedPixel;
 	}
 	
-	public static void shrinkPixelTest(int newSize, String filename) throws IOException {
+	public void shrinkPixelTest(int newSize, String filename) throws IOException {
 		BufferedImage lena, lenaGray, modifiedLena = null;
 		int[][] lenaArr = null;
 		int[][] shrinkedArr = null;
@@ -518,7 +520,7 @@ public class ImageOperations {
 	}
 	
 	// display the image in a jFrame
-	public static void display(final String filename) throws Exception
+	public void display(final String filename) throws Exception
 	  {
 	    SwingUtilities.invokeLater(new Runnable()
 	    {
@@ -551,18 +553,21 @@ public class ImageOperations {
 	  }
 	
 	public static void main(String[] args) throws Exception {
-		BufferedImage img, imgGray = null;
-		img = loadImage("/Users/maxkim/Applications/maxfolder/CPP/"
+            /*
+		//BufferedImage img, imgGray = null;
+                ImageOperations imgOperations = new ImageOperations();
+               
+		imgOperations.img = loadImage("/Users/maxkim/Applications/maxfolder/CPP/"
 				+ "CS555_Image_Processing_Raheja/Image_Operations/shrinked64.gif");
-		imgGray = convertToGrayScale(img);
-		zoomNeighbors(imgGray, 1024, 1024, "nn1024.gif"); 
-		zoomBilinear(imgGray, 1024, 1024, "bi1024.gif"); 
-		zoomLinearY(imgGray, 1024, 1024 ,"x", "linearY1024.gif");
-		changeGrayScaleRes(imgGray, 5, "res5.gif");
+		imgOperations.imgGray = convertToGrayScale(imgOperations.img);
+		imgOperations.zoomNeighbors(imgOperations.imgGray, 1024, 1024, "nn1024.gif"); 
+		imgOperations.zoomBilinear(imgOperations.imgGray, 1024, 1024, "bi1024.gif"); 
+		imgOperations.zoomLinearY(imgOperations.imgGray, 1024, 1024 ,"x", "linearY1024.gif");
+		changeGrayScaleRes(imgOperations.imgGray, 5, "res5.gif");
 		shrinkPixelTest(64, "shrinked64.gif");
-		zoomLinearY(imgGray, 1024, 1024 ,"x", "linearX1024.gif");
+		zoomLinearY(imgOperations.imgGray, 1024, 1024 ,"x", "linearX1024.gif");
 		//display("/Users/maxkim/Applications/maxfolder/CPP/CS555_Image_Processing_Raheja/Image_Operations/linearX1024.gif");
 		//display("res5.gif");
-
+                */
 	}
 }

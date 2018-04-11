@@ -26,30 +26,39 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="43" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabelName" alignment="0" min="-2" pref="124" max="-2" attributes="0"/>
-                  <Component id="jLabelNumBits" alignment="0" min="-2" pref="112" max="-2" attributes="0"/>
-                  <Component id="jLabelWidth" alignment="0" min="-2" pref="93" max="-2" attributes="0"/>
-                  <Component id="jLabelHeight" alignment="0" min="-2" pref="93" max="-2" attributes="0"/>
-                  <Component id="jLabelResample" alignment="0" min="-2" pref="93" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jButtonDisplay" min="-2" max="-2" attributes="0"/>
-                  <Component id="jComboBoxResample" min="-2" max="-2" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="jTextFieldWidth" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jTextFieldHeight" alignment="0" max="32767" attributes="0"/>
-                          <Component id="jTextFieldNumBits" alignment="0" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Component id="jLabelName1" min="-2" pref="124" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="jTextFieldName1" min="-2" pref="214" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
-                          <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelName" alignment="0" min="-2" pref="124" max="-2" attributes="0"/>
+                          <Component id="jLabelNumBits" alignment="0" min="-2" pref="112" max="-2" attributes="0"/>
+                          <Component id="jLabelWidth" alignment="0" min="-2" pref="93" max="-2" attributes="0"/>
+                          <Component id="jLabelHeight" alignment="0" min="-2" pref="93" max="-2" attributes="0"/>
+                          <Component id="jLabelResample" alignment="0" min="-2" pref="93" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jButtonDisplay" min="-2" max="-2" attributes="0"/>
+                          <Component id="jComboBoxResample" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="jTextFieldWidth" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldHeight" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="jTextFieldNumBits" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
+                                  <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="jTextFieldName" min="-2" pref="214" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="jTextFieldName" min="-2" pref="214" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="171" max="32767" attributes="0"/>
           </Group>
@@ -63,18 +72,26 @@
                   <Component id="jLabelName" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                   <Component id="jTextFieldName" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jLabelResample" min="-2" pref="33" max="-2" attributes="0"/>
-                  <Component id="jComboBoxResample" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jTextFieldWidth" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jLabelName1" min="-2" pref="33" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jLabelWidth" min="-2" pref="33" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+                      <Component id="jTextFieldName1" min="-2" pref="33" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelResample" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                  <Component id="jComboBoxResample" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelWidth" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
+                  <Component id="jTextFieldWidth" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -82,15 +99,19 @@
                   <Component id="jLabelHeight" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
                   <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="jLabelNumBits" alignment="3" min="-2" pref="33" max="-2" attributes="0"/>
-                  <Component id="jTextFieldNumBits" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="jLabelNumBits" min="-2" pref="33" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+                      <Component id="jButtonDisplay" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jTextFieldNumBits" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
-              <Component id="jButtonDisplay" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="192" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -122,6 +143,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldName">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="ex) lena_gray.gif"/>
+      </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldWidth">
     </Component>
@@ -129,10 +153,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="jTextFieldNumBits">
       <Properties>
-        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-          <Color blue="66" green="33" red="ff" type="rgb"/>
-        </Property>
-        <Property name="text" type="java.lang.String" value="grayscale level resolution"/>
+        <Property name="text" type="java.lang.String" value="ex) 5"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="jComboBoxResample">
@@ -173,6 +194,19 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDisplayActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelName1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="New File Name:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldName1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="ex) NearNeigh1000.gif"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jTextFieldName1ActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
