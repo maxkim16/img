@@ -5,16 +5,26 @@
  */
 package imageoperations;
 
+import java.awt.BorderLayout;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
+import javax.swing.WindowConstants;
 
 /**
  *
  * @author maxkim
  */
 public class ImageJFrame extends javax.swing.JFrame {
-
+    ImageJFrame imgJFrame;
     ImageOperations imgOpe;
+    ImageDisplayer imgDisplayer;
     
     /**
      * Creates new form ImageJFrame
@@ -23,6 +33,7 @@ public class ImageJFrame extends javax.swing.JFrame {
         initComponents();
         myInitComponents();
         this.imgOpe = new ImageOperations();
+        this.imgDisplayer = new ImageDisplayer();
     }
 
     /**
@@ -176,12 +187,12 @@ public class ImageJFrame extends javax.swing.JFrame {
     
     // resample the given image depending on the algorithm the user chooses
     private void jButtonDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisplayActionPerformed
-        String filename, newFileName, algorithm;
+        String fileName, newFileName, algorithm;
         int newWidth, newHeight, numOfBits;
         try {
             // load the file
-            filename = jTextFieldName.getText();
-            imgOpe.img = imgOpe.loadImage(filename);
+            fileName = jTextFieldName.getText();
+            imgOpe.img = imgOpe.loadImage(fileName);
             
             // get the name of the new file that will be resampled
             newFileName = jTextFieldName1.getText();
@@ -192,14 +203,13 @@ public class ImageJFrame extends javax.swing.JFrame {
             // get the chosen algorithm
             algorithm = jComboBoxResample.getSelectedItem().toString();
             
-
-
             // depending on the algorithm, resample the image and display it
             switch (algorithm) {
                 case "Change Grayscale Level Resolution":
                     numOfBits = Integer.parseInt(jTextFieldNumBits.getText());
                     imgOpe.changeGrayScaleRes(imgOpe.imgGray, numOfBits, newFileName);
                     imgOpe.display(newFileName);
+                    //imgDisplayer.display2Images(fileName, newFileName);
                     break;
                 case "Nearest Neighbors":
                     // get the new width and height
@@ -212,14 +222,14 @@ public class ImageJFrame extends javax.swing.JFrame {
                     // get the new width and height
                     newWidth = Integer.parseInt(jTextFieldWidth.getText());
                     newHeight = Integer.parseInt(jTextFieldHeight.getText());
-                    imgOpe.zoomLinearX(imgOpe.imgGray, newWidth, newWidth, newFileName);
+                    imgOpe.zoomLinearX(imgOpe.imgGray, newWidth, newHeight, newFileName);
                     imgOpe.display(newFileName);
                     break;
                 case "Linear Interpolation (y-values)":
                     // get the new width and height
                     newWidth = Integer.parseInt(jTextFieldWidth.getText());
                     newHeight = Integer.parseInt(jTextFieldHeight.getText());
-                    imgOpe.zoomLinearY(imgOpe.imgGray, newWidth, newWidth, newFileName);
+                    imgOpe.zoomLinearY(imgOpe.imgGray, newWidth, newHeight, newFileName);
                     imgOpe.display(newFileName);
                     break;
                 case "Bilinear Interpolation":
@@ -255,6 +265,7 @@ public class ImageJFrame extends javax.swing.JFrame {
         jComboBoxResample.addItem("Bilinear Interpolation");
     }
             
+    
     /**
      * @param args the command line arguments
      */
