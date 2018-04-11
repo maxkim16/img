@@ -93,8 +93,8 @@ public class ImageOperations {
             ImageIO.write(bi, "gif", outputfile);
             
             // write it in the src file 
-            File outputfile2 = new File(name);
-            ImageIO.write(bi, "gif", outputfile2);
+           // File outputfile2 = new File(name);
+            //ImageIO.write(bi, "gif", outputfile2);
             
         } catch (IOException e) {
             System.out.println(e.getMessage());
@@ -226,7 +226,7 @@ public class ImageOperations {
             e.printStackTrace();
         }
         pixelIn1dArr = gridTo1dArr(oriImgPixel);
-        // Use Bilinear Algorithm on the given pixel values.
+        // Use Nearest Neighbors Algorithm on the given pixel values.
         zoomedPixelIn1dArr = resizePixelsNN(pixelIn1dArr, w1, h1, newW, newH);
         zoomedPixel = pixelTo1dToGrid(zoomedPixelIn1dArr, newW, newH);
 
@@ -236,7 +236,7 @@ public class ImageOperations {
     }
 
     
-        public void zoomLinearX(BufferedImage bi, int newW, int newH, String filename) {
+    public void zoomLinearX(BufferedImage bi, int newW, int newH, String filename) {
         BufferedImage zoomedImage = new BufferedImage(newW, newH, BufferedImage.TYPE_BYTE_GRAY);
         SampleModel sampleModel = null;
         int w1, h1, w2, h2;
@@ -299,18 +299,16 @@ public class ImageOperations {
         int colsForLinearInt = w2 / w;
         System.out.println("selected cols: " + colsForLinearInt);
         int[][] temp2 = new int[w2][h2];
-        int[] temp = new int[w2 * h2];
         int A, B, C, D, x, y, index, gray;
-        float x_ratio = ((float) (w - 1)) / w2;
-        float y_ratio = ((float) (h - 1)) / h2;
-        float x_diff, y_diff;
-        int offset = 0;
+        float xRatio = ((float) (w - 1)) / w2;
+        float yRatio = ((float) (h - 1)) / h2;
+        float xDistance, yDistance;
         for (int i = 0; i < h2; i++) {
             for (int j = 0; j < w2; j += colsForLinearInt) {
-                x = (int) (x_ratio * j);
-                y = (int) (y_ratio * i);
-                x_diff = (x_ratio * j) - x;
-                y_diff = (y_ratio * i) - y;
+                x = (int) (xRatio * j);
+                y = (int) (yRatio * i);
+                xDistance = (xRatio * j) - x;
+                yDistance = (yRatio * i) - y;
                 index = y * w + x;
 
                 // B and D are ignored since new x values won't be calculated
@@ -320,7 +318,7 @@ public class ImageOperations {
                 // D = pixels[index+w+1] & 0xff ;
 
                 // Y = A(1-w)(1-h) + B(w)(1-h) + C(h)(1-w) + Dwh
-                gray = (int) (A * (1 - x_diff) * (1 - y_diff) + C * (y_diff) * (1 - x_diff));
+                gray = (int) (A * (1 - xDistance) * (1 - yDistance) + C * (yDistance) * (1 - xDistance));
                 temp2[i][j] = gray;
                 //temp[offset++] = gray ;                                   
             }
@@ -335,18 +333,16 @@ public class ImageOperations {
         int rowsForLinearInt = h2 / h;
         System.out.println("selected rows: " + rowsForLinearInt);
         int[][] temp2 = new int[w2][h2];
-        int[] temp = new int[w2 * h2];
         int A, B, C, D, x, y, index, gray;
-        float x_ratio = ((float) (w - 1)) / w2;
-        float y_ratio = ((float) (h - 1)) / h2;
-        float x_diff, y_diff;
-        int offset = 0;
+        float xRatio = ((float) (w - 1)) / w2;
+        float yRatio = ((float) (h - 1)) / h2;
+        float xDistance, yDistance;
         for (int i = 0; i < h2; i += rowsForLinearInt) {
             for (int j = 0; j < w2; j++) {
-                x = (int) (x_ratio * j);
-                y = (int) (y_ratio * i);
-                x_diff = (x_ratio * j) - x;
-                y_diff = (y_ratio * i) - y;
+                x = (int) (xRatio * j);
+                y = (int) (yRatio * i);
+                xDistance = (xRatio * j) - x;
+                yDistance = (yRatio * i) - y;
                 index = y * w + x;
 
                 // range is 0 to 255 thus bitwise AND with 0xff
@@ -356,7 +352,7 @@ public class ImageOperations {
                 // D = pixels[index+w+1] & 0xff ;
 
                 // Y = A(1-w)(1-h) + B(w)(1-h) + C(h)(1-w) + Dwh
-                gray = (int) (A * (1 - x_diff) * (1 - y_diff) + B * (x_diff) * (1 - y_diff));
+                gray = (int) (A * (1 - xDistance) * (1 - yDistance) + B * (xDistance) * (1 - yDistance));
                 temp2[i][j] = gray;
                 //temp[offset++] = gray ;                                   
             }
@@ -394,30 +390,28 @@ public class ImageOperations {
     // Use Bilinear Interpolation to zoom the image
     public int[] resizeBilinearGray(int[] pixels, int w, int h, int w2, int h2) {
         int[] temp = new int[w2 * h2];
-        int A, B, C, D, x, y, index, gray;
-        float x_ratio = ((float) (w - 1)) / w2;
-        float y_ratio = ((float) (h - 1)) / h2;
-        float x_diff, y_diff, ya, yb;
+        float xDistance, yDistance;
+        int A, B, C, D, x, y, index, grayLevel;
+        float xRatio = ((float) (w - 1)) / w2;
+        float yRatio = ((float) (h - 1)) / h2;
         int offset = 0;
         for (int i = 0; i < h2; i++) {
             for (int j = 0; j < w2; j++) {
-                x = (int) (x_ratio * j);
-                y = (int) (y_ratio * i);
-                x_diff = (x_ratio * j) - x;
-                y_diff = (y_ratio * i) - y;
+                x = (int) (xRatio * j);
+                y = (int) (yRatio * i);
+                xDistance= (xRatio * j) - x;
+                yDistance = (yRatio * i) - y;
                 index = y * w + x;
 
-                // range is 0 to 255 thus bitwise AND with 0xff
                 A = pixels[index] & 0xff;
                 B = pixels[index + 1] & 0xff;
                 C = pixels[index + w] & 0xff;
                 D = pixels[index + w + 1] & 0xff;
 
-                // Y = A(1-w)(1-h) + B(w)(1-h) + C(h)(1-w) + Dwh
-                gray = (int) (A * (1 - x_diff) * (1 - y_diff) + B * (x_diff) * (1 - y_diff)
-                        + C * (y_diff) * (1 - x_diff) + D * (x_diff * y_diff));
+                grayLevel = (int) (A * (1 - xDistance) * (1 - yDistance) + B * (xDistance) * (1 - yDistance)
+                        + C * (yDistance) * (1 - xDistance) + D * (xDistance * yDistance));
 
-                temp[offset++] = gray;
+                temp[offset++] = grayLevel;
             }
         }
         return temp;
@@ -459,32 +453,33 @@ public class ImageOperations {
     public int[] useNNyValues(int[] pixels, int w1, int h1, int w2, int h2) {
         int[] temp = new int[w2 * h2];
         int colsForXvalues = w2 / w1;
-        double x_ratio = w1 / (double) w2;
-        double y_ratio = h1 / (double) h2;
-        double px, py;
+        double xRatio = w1 / (double) w2;
+        double yRatio = h1 / (double) h2;
+        double pixelX, pixelY;
         for (int i = 0; i < h2; i++) {
             for (int j = 0; j < w2; j++) {
                 if ((j == 0) || ((j % colsForXvalues) == 0)) {
                     continue;
                 }
-                px = Math.floor(j * x_ratio);
-                py = Math.floor(i * y_ratio);
-                temp[(i * w2) + j] = pixels[(int) ((py * w1) + px)];
+                pixelX = Math.floor(j * xRatio);
+                pixelY = Math.floor(i * yRatio);
+                temp[(i * w2) + j] = pixels[(int) ((pixelY * w1) + pixelX)];
             }
         }
         return temp;
     }
 
+    // use nearest neighbors to interpolate unknown pixels
     public int[] resizePixelsNN(int[] pixels, int w1, int h1, int w2, int h2) {
         int[] temp = new int[w2 * h2];
-        double x_ratio = w1 / (double) w2;
-        double y_ratio = h1 / (double) h2;
-        double px, py;
+        double xRatio = w1 / (double) w2;
+        double yRatio = h1 / (double) h2;
+        double pixelX, pixelY;
         for (int i = 0; i < h2; i++) {
             for (int j = 0; j < w2; j++) {
-                px = Math.floor(j * x_ratio);
-                py = Math.floor(i * y_ratio);
-                temp[(i * w2) + j] = pixels[(int) ((py * w1) + px)];
+                pixelX = Math.floor(j * xRatio);
+                pixelY = Math.floor(i * yRatio);
+                temp[(i * w2) + j] = pixels[(int) ((pixelY * w1) + pixelX)];
             }
         }
         return temp;
@@ -609,7 +604,7 @@ public class ImageOperations {
     public void display(final String filename) throws Exception {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                JFrame editorFrame = new JFrame("Image Demo");
+                JFrame editorFrame = new JFrame("Resampled Image");
                 editorFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
                 BufferedImage image = null;

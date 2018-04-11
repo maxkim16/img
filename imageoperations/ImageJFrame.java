@@ -252,7 +252,6 @@ public class ImageJFrame extends javax.swing.JFrame {
                     imgOpe.display(newFileName);
                     break;
             }
-            
         } catch (Exception ex) {
             Logger.getLogger(ImageJFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
