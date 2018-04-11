@@ -67,7 +67,7 @@ public class ImageJFrame extends javax.swing.JFrame {
 
         jTextFieldNumBits.setText("ex) 5");
 
-        jComboBoxResample.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Change Grayscale Level Resolution", "Nearest Neighbors", "Linear Interpolation (x-values)", "Linear Interpolation (y-values)", "Bilinear Interpolation", " " }));
+        jComboBoxResample.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Change Grayscale Level Resolution", "Nearest Neighbors", "Linear Interpolation (x-values)", "Linear Interpolation (y-values)", "Bilinear Interpolation", "Shrink", " " }));
 
         jLabel1.setText("pixels");
 
@@ -192,28 +192,49 @@ public class ImageJFrame extends javax.swing.JFrame {
             // get the chosen algorithm
             algorithm = jComboBoxResample.getSelectedItem().toString();
             
-            // get the new width and height
-                        int a = Integer.parseInt("7");
 
-            newWidth = Integer.parseInt(jTextFieldWidth.getText());
-            newHeight = Integer.parseInt(jTextFieldHeight.getText());
 
             // depending on the algorithm, resample the image and display it
             switch (algorithm) {
                 case "Change Grayscale Level Resolution":
-                     numOfBits = Integer.parseInt(jTextFieldNumBits.getText());
-                     imgOpe.changeGrayScaleRes(imgOpe.imgGray, numOfBits, newFileName);
-                     imgOpe.display(newFileName);
-                case "Nearest Neighbors":
-                     imgOpe.zoomNeighbors(imgOpe.imgGray, newWidth, newHeight, newFileName);
-                     imgOpe.display(newFileName);
-                case "Linear Interpolation (x-values)":
-                case "Linear Interpolation (y-values)":
-                     imgOpe.zoomLinearY(imgOpe.imgGray, newWidth, newWidth, newFileName);
-                     imgOpe.display(newFileName);
-                case "Bilinear Interpolation":
-                    imgOpe.zoomBilinear(imgOpe.imgGray, newWidth, newHeight, newFileName); 
+                    numOfBits = Integer.parseInt(jTextFieldNumBits.getText());
+                    imgOpe.changeGrayScaleRes(imgOpe.imgGray, numOfBits, newFileName);
                     imgOpe.display(newFileName);
+                    break;
+                case "Nearest Neighbors":
+                    // get the new width and height
+                    newWidth = Integer.parseInt(jTextFieldWidth.getText());
+                    newHeight = Integer.parseInt(jTextFieldHeight.getText());
+                    imgOpe.zoomNeighbors(imgOpe.imgGray, newWidth, newHeight, newFileName);
+                    imgOpe.display(newFileName);
+                    break;
+                case "Linear Interpolation (x-values)":
+                    // get the new width and height
+                    newWidth = Integer.parseInt(jTextFieldWidth.getText());
+                    newHeight = Integer.parseInt(jTextFieldHeight.getText());
+                    break;
+                case "Linear Interpolation (y-values)":
+                    // get the new width and height
+                    newWidth = Integer.parseInt(jTextFieldWidth.getText());
+                    newHeight = Integer.parseInt(jTextFieldHeight.getText());
+                    imgOpe.zoomLinearY(imgOpe.imgGray, newWidth, newWidth, newFileName);
+                    imgOpe.display(newFileName);
+                    break;
+                case "Bilinear Interpolation":
+                    // get the new width and height
+                    newWidth = Integer.parseInt(jTextFieldWidth.getText());
+                    newHeight = Integer.parseInt(jTextFieldHeight.getText());
+                    imgOpe.zoomBilinear(imgOpe.imgGray, newWidth, newHeight, newFileName);
+                    imgOpe.display(newFileName);
+                    break;
+                    
+                case "Shrink":
+                    // get the new width and height
+                    newWidth = Integer.parseInt(jTextFieldWidth.getText());
+                    newHeight = Integer.parseInt(jTextFieldHeight.getText());
+                    imgOpe.shrinkImage(imgOpe.imgGray, newWidth, newHeight, newFileName);
+                    imgOpe.display(newFileName);
+                    break;
             }
             
         } catch (Exception ex) {
