@@ -35,6 +35,51 @@ public class spatialFilters {
         io = new ImageOperations();
     }
     
+    public BufferedImage applyLocalHistogram(BufferedImage bi, int maskSize, String newFileName) throws IOException {
+        this.maskSize = maskSize;
+        BufferedImage biGray, modifiedBi = null;
+        int[][] biGrayArr = null;
+        SampleModel sampleModel;
+        Raster raster = null;
+
+        // get the gray scale version of Lena image
+        biGray = io.convertToGrayScale(bi);
+
+        // get the pixels of the image by getting the raster of the image
+        biGrayArr = io.imgTo2DArrPixel(biGray);
+
+        // make zero-padded source image and the filtered image
+        paddedImg = new int[biGrayArr.length + (maskSize - 1)][biGrayArr[0].length + (maskSize-1)];  
+        filteredImgPadding = new int[biGrayArr.length + (maskSize - 1) ][biGrayArr[0].length + (maskSize - 1)];  
+        
+        neighborImg = new int[maskSize * maskSize];
+        
+        // raster coordinate is differnt from image coordinate!! width -> height
+        filteredImgNoPadding = new int[biGrayArr.length][biGrayArr[0].length];
+        
+
+        // apply the 0-padding and save the pixels of the original image into paddedImg
+        loadPixels(biGrayArr);        
+        
+        // apply the local histogram and save the filtered pixels into filteredImgPadding
+        localHistogram(biGrayArr.length, biGrayArr[0].length);
+        
+        // fill the pixels without the padding into filterdImgNoPadding
+        setFilteredImgNoPadding();
+        
+        modifiedBi = new BufferedImage(biGrayArr.length, biGrayArr[0].length, BufferedImage.TYPE_BYTE_GRAY);
+
+        raster = modifiedBi.getData();
+        sampleModel = raster.getSampleModel();
+
+        // convert the pixel values of the filteredImgNoPadding into a bufferedImage
+        modifiedBi = io.convertPixelToBufImg(filteredImgNoPadding, sampleModel);
+
+        // write the bufferedImage into a file and save it
+        io.writeFile(modifiedBi, newFileName);
+        return null;
+    }
+    
     public BufferedImage applyAverageFilter2(BufferedImage bi, int maskSize, String newFileName) throws IOException {
         this.maskSize = maskSize;
         BufferedImage biGray, modifiedBi = null;
@@ -67,15 +112,50 @@ public class spatialFilters {
         // fill the pixels without the padding into filterdImgNoPadding
         setFilteredImgNoPadding();
         
-        // test paddings///////////
-        /*
-        BufferedImage testBi;
-        testBi = new BufferedImage(filteredImgPadding.length, filteredImgPadding[0].length, BufferedImage.TYPE_BYTE_GRAY);
-        Raster rsPad = testBi.getData();
-        SampleModel sm = rsPad.getSampleModel();
-        testBi = io.convertPixelToBufImg(filteredImgPadding, sm);
-        io.writeFile(testBi, "filPadding.gif");
-        */
+        modifiedBi = new BufferedImage(biGrayArr.length, biGrayArr[0].length, BufferedImage.TYPE_BYTE_GRAY);
+
+        raster = modifiedBi.getData();
+        sampleModel = raster.getSampleModel();
+
+        // convert the pixel values of the filteredImgNoPadding into a bufferedImage
+        modifiedBi = io.convertPixelToBufImg(filteredImgNoPadding, sampleModel);
+
+        // write the bufferedImage into a file and save it
+        io.writeFile(modifiedBi, newFileName);
+        return null;
+    }
+    
+        public BufferedImage applyMedianFilter(BufferedImage bi, int maskSize, String newFileName) throws IOException {
+        this.maskSize = maskSize;
+        BufferedImage biGray, modifiedBi = null;
+        int[][] biGrayArr = null;
+        SampleModel sampleModel;
+        Raster raster = null;
+
+        // get the gray scale version of Lena image
+        biGray = io.convertToGrayScale(bi);
+
+        // get the pixels of the image by getting the raster of the image
+        biGrayArr = io.imgTo2DArrPixel(biGray);
+
+        // make zero-padded source image and the filtered image
+        paddedImg = new int[biGrayArr.length + (maskSize - 1)][biGrayArr[0].length + (maskSize-1)];  
+        filteredImgPadding = new int[biGrayArr.length + (maskSize - 1) ][biGrayArr[0].length + (maskSize - 1)];  
+        
+        neighborImg = new int[maskSize * maskSize];
+        
+        // raster coordinate is differnt from image coordinate!! width -> height
+        filteredImgNoPadding = new int[biGrayArr.length][biGrayArr[0].length];
+        
+
+        // apply the 0-padding and save the pixels of the original image into paddedImg
+        loadPixels(biGrayArr);        
+        
+        // apply the median filter and save the filtered pixels into filteredImgPadding
+        medianFilter(biGrayArr.length, biGrayArr[0].length);
+        
+        // fill the pixels without the padding into filterdImgNoPadding
+        setFilteredImgNoPadding();
         
         modifiedBi = new BufferedImage(biGrayArr.length, biGrayArr[0].length, BufferedImage.TYPE_BYTE_GRAY);
 
@@ -89,6 +169,7 @@ public class spatialFilters {
         io.writeFile(modifiedBi, newFileName);
         return null;
     }
+    
     /*
     public BufferedImage applyAverageFilter(BufferedImage srcImg, int maskSize) {
         // get the grayscale image of the source image
@@ -217,7 +298,35 @@ public class spatialFilters {
         }
         return median;
     }
-
+    
+    // return the local histogram value
+    public int getLocalHistogram() {
+        int localEqualized = 0;
+        int[] histogram = new int[256];
+        int[] cumulativeHist = new int[256];
+        int[] newIntensity = new int[256];
+        
+        // make histogram
+        for(int i = 0; i < neighborImg.length; i++){
+                histogram[neighborImg[i]]++;
+        }
+        
+        // make cumulative histogram
+        cumulativeHist[0] = histogram[0];
+        for (int i = 1; i < 256; i++) {
+            cumulativeHist[i] = cumulativeHist[i - 1] + histogram [i];
+        }
+        
+        // make new intensities
+        for (int i = 0; i < 256; i++) {
+            newIntensity[i] = (int)((cumulativeHist[i] / (float)(maskSize*maskSize)) * 255.0);
+        }
+        
+        // return the local histogram equalized value
+        return newIntensity[neighborImg[neighborImg.length/2]];
+        
+    }
+    
     // apply the average filter on the image
     public void averageFilter(int row, int col) {
         for (int i = (maskSize / 2); i < (maskSize/2) + row; i++) {
@@ -238,6 +347,18 @@ public class spatialFilters {
                 loadNeighbors(i, j);
                 // save the filtered pixels
                 filteredImgPadding[i][j] = getMedian();
+            }
+        }
+    }
+    
+    // apply local histogram on the image
+        public void localHistogram(int row, int col) {
+        for (int i = (maskSize / 2); i < (maskSize/2) + row; i++) {
+            for (int j = (maskSize / 2); j < (maskSize/2) + col; j++) {
+                // load the grayscale intensities of the neighbor pixels
+                loadNeighbors(i, j);
+                // save the filtered pixels
+                filteredImgPadding[i][j] = getLocalHistogram();
             }
         }
     }

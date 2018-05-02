@@ -89,7 +89,7 @@ public class ImageJFrame extends javax.swing.JFrame {
             }
         });
 
-        jComboBoxResample.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Change Grayscale Level Resolution", "Nearest Neighbors", "Linear Interpolation (x-values)", "Linear Interpolation (y-values)", "Bilinear Interpolation", "Shrink", "Histogram Equalization", "Smoothing Filter", " " }));
+        jComboBoxResample.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Change Grayscale Level Resolution", "Nearest Neighbors", "Linear Interpolation (x-values)", "Linear Interpolation (y-values)", "Bilinear Interpolation", "Shrink", "Histogram Equalization", "Local Histogram Equalization", "Smoothing Filter", "Median Filter", " " }));
 
         jLabel1.setText("pixels");
 
@@ -282,10 +282,24 @@ public class ImageJFrame extends javax.swing.JFrame {
                     imgOpe.displayLeft(fileName);
                     imgOpe.display(newFileName);
                     break;
+                case "Local Histogram Equalization":
+                    maskSize = Integer.parseInt(jTextFieldMask.getText());
+                    sf.applyLocalHistogram(imgOpe.imgGray, maskSize, newFileName);
+                    //imgOpe.writeFile(newImg2, fileName);
+                    imgOpe.displayLeft(fileName);
+                    imgOpe.display(newFileName);
+                    break;
                 case "Smoothing Filter":
                     //BufferedImage newImg2;
                     maskSize = Integer.parseInt(jTextFieldMask.getText());
                     sf.applyAverageFilter2(imgOpe.imgGray, maskSize, newFileName );
+                    //imgOpe.writeFile(newImg2, fileName);
+                    imgOpe.displayLeft(fileName);
+                    imgOpe.display(newFileName);
+                    break;
+                case "Median Filter":
+                    maskSize = Integer.parseInt(jTextFieldMask.getText());
+                    sf.applyMedianFilter(imgOpe.imgGray, maskSize, newFileName );
                     //imgOpe.writeFile(newImg2, fileName);
                     imgOpe.displayLeft(fileName);
                     imgOpe.display(newFileName);
