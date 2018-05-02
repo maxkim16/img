@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
@@ -25,6 +26,8 @@ public class ImageJFrame extends javax.swing.JFrame {
     ImageJFrame imgJFrame;
     ImageOperations imgOpe;
     ImageDisplayer imgDisplayer;
+    HstEqual hstEqual;
+    spatialFilters sf;
     
     /**
      * Creates new form ImageJFrame
@@ -34,6 +37,8 @@ public class ImageJFrame extends javax.swing.JFrame {
         myInitComponents();
         this.imgOpe = new ImageOperations();
         this.imgDisplayer = new ImageDisplayer();
+        this.hstEqual = new HstEqual();
+        this.sf = new spatialFilters();
     }
 
     /**
@@ -61,6 +66,8 @@ public class ImageJFrame extends javax.swing.JFrame {
         jButtonDisplay = new javax.swing.JButton();
         jLabelName1 = new javax.swing.JLabel();
         jTextFieldName1 = new javax.swing.JTextField();
+        jLabelMask = new javax.swing.JLabel();
+        jTextFieldMask = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -76,9 +83,13 @@ public class ImageJFrame extends javax.swing.JFrame {
 
         jTextFieldName.setText("ex) lena_gray.gif");
 
-        jTextFieldNumBits.setText("ex) 5");
+        jTextFieldNumBits.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldNumBitsActionPerformed(evt);
+            }
+        });
 
-        jComboBoxResample.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Change Grayscale Level Resolution", "Nearest Neighbors", "Linear Interpolation (x-values)", "Linear Interpolation (y-values)", "Bilinear Interpolation", "Shrink", " " }));
+        jComboBoxResample.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Change Grayscale Level Resolution", "Nearest Neighbors", "Linear Interpolation (x-values)", "Linear Interpolation (y-values)", "Bilinear Interpolation", "Shrink", "Histogram Equalization", "Smoothing Filter", " " }));
 
         jLabel1.setText("pixels");
 
@@ -102,6 +113,8 @@ public class ImageJFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabelMask.setText("Mask Size:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -122,20 +135,27 @@ public class ImageJFrame extends javax.swing.JFrame {
                             .addComponent(jLabelResample, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jTextFieldHeight, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                                    .addComponent(jTextFieldWidth))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel1)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(jLabelMask, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTextFieldMask, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(jButtonDisplay)
                             .addComponent(jComboBoxResample, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(jTextFieldWidth, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldHeight, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextFieldNumBits, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addComponent(jTextFieldNumBits, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2)
-                                    .addComponent(jLabel3)))
+                                .addComponent(jLabel3))
                             .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(171, Short.MAX_VALUE))
+                .addGap(151, 151, 151))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,7 +179,9 @@ public class ImageJFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelWidth, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jTextFieldWidth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(jLabel1)
+                    .addComponent(jLabelMask, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldMask, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextFieldHeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -188,7 +210,7 @@ public class ImageJFrame extends javax.swing.JFrame {
     // resample the given image depending on the algorithm the user chooses
     private void jButtonDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDisplayActionPerformed
         String fileName, newFileName, algorithm;
-        int newWidth, newHeight, numOfBits;
+        int newWidth, newHeight, numOfBits, maskSize;
         try {
             // load the file
             fileName = jTextFieldName.getText();
@@ -206,6 +228,7 @@ public class ImageJFrame extends javax.swing.JFrame {
             // depending on the algorithm, resample the image and display it
             switch (algorithm) {
                 case "Change Grayscale Level Resolution":
+                    JOptionPane.showMessageDialog(null, "here");
                     numOfBits = Integer.parseInt(jTextFieldNumBits.getText());
                     imgOpe.changeGrayScaleRes(imgOpe.imgGray, numOfBits, newFileName);
                     imgOpe.displayLeft(fileName);
@@ -251,6 +274,22 @@ public class ImageJFrame extends javax.swing.JFrame {
                     imgOpe.displayLeft(fileName);
                     imgOpe.display(newFileName);
                     break;
+                case "Histogram Equalization":
+                    // apply the histogram equalization on the image
+                    BufferedImage newImg;
+                    newImg = hstEqual.hstEqualizationGray(imgOpe.imgGray);
+                    imgOpe.writeFile(newImg, newFileName);
+                    imgOpe.displayLeft(fileName);
+                    imgOpe.display(newFileName);
+                    break;
+                case "Smoothing Filter":
+                    //BufferedImage newImg2;
+                    maskSize = Integer.parseInt(jTextFieldMask.getText());
+                    sf.applyAverageFilter2(imgOpe.imgGray, maskSize, newFileName );
+                    //imgOpe.writeFile(newImg2, fileName);
+                    imgOpe.displayLeft(fileName);
+                    imgOpe.display(newFileName);
+                    break;
             }
         } catch (Exception ex) {
             Logger.getLogger(ImageJFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -260,6 +299,10 @@ public class ImageJFrame extends javax.swing.JFrame {
     private void jTextFieldName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldName1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldName1ActionPerformed
+
+    private void jTextFieldNumBitsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNumBitsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldNumBitsActionPerformed
     
     private void addItemsComboBox() {
         jComboBoxResample.addItem("Grayscale Level Resolution");
@@ -312,12 +355,14 @@ public class ImageJFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabelHeight;
+    private javax.swing.JLabel jLabelMask;
     private javax.swing.JLabel jLabelName;
     private javax.swing.JLabel jLabelName1;
     private javax.swing.JLabel jLabelNumBits;
     private javax.swing.JLabel jLabelResample;
     private javax.swing.JLabel jLabelWidth;
     private javax.swing.JTextField jTextFieldHeight;
+    private javax.swing.JTextField jTextFieldMask;
     private javax.swing.JTextField jTextFieldName;
     private javax.swing.JTextField jTextFieldName1;
     private javax.swing.JTextField jTextFieldNumBits;
